@@ -60,7 +60,7 @@ def get_user_lang(id):
 
         if "lang" not in columns:
             print("[ERROR] get_user_lang: Column 'lang' not found in 'users' table")
-            return "ru"
+            return "en"
 
         # Получаем данные пользователя
         query = "SELECT * FROM users WHERE id = ?"
@@ -68,16 +68,16 @@ def get_user_lang(id):
         print(f"[DEBUG] Full user data: {user_data}")
 
         if not user_data:
-            print(f"[DEBUG] get_user_lang: User {id} not found, defaulting to 'ru'")
-            return "ru"
+            print(f"[DEBUG] get_user_lang: User {id} not found, defaulting to 'en'")
+            return "en"
 
         # Получаем язык
         lang = user_data.get("lang")
         print(f"[DEBUG] get_user_lang: Raw lang from DB: '{lang}'")
 
         if not lang or lang.strip() == "":
-            print(f"[DEBUG] get_user_lang: User {id} has empty lang, defaulting to 'ru'")
-            return "ru"
+            print(f"[DEBUG] get_user_lang: User {id} has empty lang, defaulting to 'en'")
+            return "en"
 
         print(f"[DEBUG] get_user_lang: Final user lang for {id}: {lang.strip()}")
         return lang.strip()  # Обрезаем пробелы, если они вдруг есть
@@ -98,8 +98,8 @@ def register_user(id, user_name, first_name):
     with sqlite3.connect(path_db) as con:
         con.row_factory = dict_factory
         con.execute("INSERT INTO users("
-                    "id, is_ban, user_name, first_name, balance, count_refills, reg_date, reg_date_unix) "
-                    "VALUES (?,?,?,?,?,?,?, ?)", [id, "False", user_name, first_name, 99999999, 0, get_date(), get_unix()])
+                    "id, is_ban, user_name, first_name, balance, count_refills, reg_date, reg_date_unix, lang) "
+                    "VALUES (?,?,?,?,?,?,?, ?,?)", [id, "False", user_name, first_name, 99999999, 0, get_date(), get_unix(), "en"])
         con.commit()
 
 # Получение пользователя из БД
